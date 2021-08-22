@@ -23,9 +23,9 @@ describe('Test if About Page have informations about Pokedex', () => {
 
   it('Test image', () => {
     render(<About />);
-    const imagePokedex = screen.getByRole('img', {
-      src: 'https://cdn2.bulbagarden.net/upload/thumb/8/86/Gen_I_Pok%C3%A9dex.png/800px-Gen_I_Pok%C3%A9dex.png',
-    });
+    const imagePokedex = screen.getByRole('img');
+    const srcImg = 'https://cdn2.bulbagarden.net/upload/thumb/8/86/Gen_I_Pok%C3%A9dex.png/800px-Gen_I_Pok%C3%A9dex.png';
     expect(imagePokedex).toBeInTheDocument();
+    expect(imagePokedex).toHaveAttribute('src', srcImg);
   });
 });
