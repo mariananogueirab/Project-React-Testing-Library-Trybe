@@ -40,4 +40,10 @@ describe('Test the nav bar', () => {
     const { pathname } = history.location;
     expect(pathname).toBe('/favorites');
   });
+  it('Test Not Found Page', () => {
+    const { history } = renderWithRouter(<App />);
+    history.push('/not-found');
+    const notFoundText = screen.getByText(/Page requested not found/i);
+    expect(notFoundText).toBeInTheDocument();
+  });
 });
