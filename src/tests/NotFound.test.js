@@ -1,8 +1,6 @@
 import React from 'react';
 import { screen, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import NotFound from '../components/NotFound';
-import renderWithRouter from '../util/renderWithRouter';
 
 describe('Test Not Found component', () => {
   it('Test heading h2', () => {
