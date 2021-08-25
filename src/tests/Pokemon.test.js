@@ -6,25 +6,26 @@ import renderWithRouter from '../util/renderWithRouter';
 import pokemons from '../data';
 
 describe('Test pokemon card', () => {
+  const pikachu = pokemons[0];
+
   it('Test card infos', () => {
     renderWithRouter(<App />);
-    const pikaxu = pokemons[0];
     const pokemonName = screen.getByTestId('pokemon-name');
-    expect(pokemonName).toHaveTextContent(pikaxu.name);
+    expect(pokemonName).toHaveTextContent(pikachu.name);
 
     const pokemonType = screen.getByTestId('pokemon-type');
-    expect(pokemonType).toHaveTextContent(pikaxu.type);
+    expect(pokemonType).toHaveTextContent(pikachu.type);
 
-    const averageWeightPikaxu = (
+    const averageWeightPikachu = (
       `Average weight: ${
-        pikaxu.averageWeight.value} ${pikaxu.averageWeight.measurementUnit}`
+        pikachu.averageWeight.value} ${pikachu.averageWeight.measurementUnit}`
     );
     const pokemonWeight = screen.getByTestId('pokemon-weight');
-    expect(pokemonWeight).toHaveTextContent(averageWeightPikaxu);
+    expect(pokemonWeight).toHaveTextContent(averageWeightPikachu);
 
     const imagePokemon = screen.getByRole('img', {
-      alt: `${pikaxu.name} sprite`,
-      src: pikaxu.image,
+      alt: `${pikachu.name} sprite`,
+      src: pikachu.image,
     });
     expect(imagePokemon).toBeInTheDocument();
   });
@@ -33,14 +34,13 @@ describe('Test pokemon card', () => {
     const { history } = renderWithRouter(<App />);
     const detailsLink = screen.getByRole('link', {
       name: /More details/i,
+      href: `pokemons/${pikachu.id}`,
     });
     expect(detailsLink).toBeInTheDocument();
 
-    const pikaxu = pokemons[0];
-
     userEvent.click(detailsLink);
     const { pathname } = history.location;
-    expect(pathname).toBe(`/pokemons/${pikaxu.id}`);
+    expect(pathname).toBe(`/pokemons/${pikachu.id}`);
   });
 
   it('Should have a star icon in Favorite Pokemon', () => {
@@ -55,5 +55,6 @@ describe('Test pokemon card', () => {
     const favoriteIcon = screen.getByAltText('Pikachu is marked as favorite');
     expect(favoriteIcon).toBeInTheDocument();
     expect(favoriteIcon).toHaveAttribute('src', '/star-icon.svg');
+    expect(favoriteIcon).toHaveAttribute('alt', 'Pikachu is marked as favorite');
   });
 });
