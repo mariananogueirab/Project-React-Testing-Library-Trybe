@@ -6,55 +6,56 @@ import renderWithRouter from '../util/renderWithRouter';
 import pokemons from '../data';
 
 describe('Test pokemon card', () => {
-  const pikachu = pokemons[0];
+  pokemons.forEach((pokemon) => {
+    it('Test card infos', () => {
+      renderWithRouter(<App />);
+      const pokemonName = screen.getByTestId('pokemon-name');
+      expect(pokemonName).toHaveTextContent(pokemon.name);
 
-  it('Test card infos', () => {
-    renderWithRouter(<App />);
-    const pokemonName = screen.getByTestId('pokemon-name');
-    expect(pokemonName).toHaveTextContent(pikachu.name);
+      const pokemonType = screen.getByTestId('pokemon-type');
+      expect(pokemonType).toHaveTextContent(pokemon.type);
 
-    const pokemonType = screen.getByTestId('pokemon-type');
-    expect(pokemonType).toHaveTextContent(pikachu.type);
+      const averageWeightpokemon = (
+        `Average weight: ${
+          pokemon.averageWeight.value} ${pokemon.averageWeight.measurementUnit}`
+      );
+      const pokemonWeight = screen.getByTestId('pokemon-weight');
+      expect(pokemonWeight).toHaveTextContent(averageWeightpokemon);
 
-    const averageWeightPikachu = (
-      `Average weight: ${
-        pikachu.averageWeight.value} ${pikachu.averageWeight.measurementUnit}`
-    );
-    const pokemonWeight = screen.getByTestId('pokemon-weight');
-    expect(pokemonWeight).toHaveTextContent(averageWeightPikachu);
-
-    const imagePokemon = screen.getByRole('img', {
-      alt: `${pikachu.name} sprite`,
-      src: pikachu.image,
+      const imagePokemon = screen.getByRole('img', {
+        alt: `${pokemon.name} sprite`,
+        src: pokemon.image,
+      });
+      expect(imagePokemon).toBeInTheDocument();
     });
-    expect(imagePokemon).toBeInTheDocument();
-  });
 
-  it('Should have a details link', () => {
-    const { history } = renderWithRouter(<App />);
-    const detailsLink = screen.getByRole('link', {
-      name: /More details/i,
-      href: `pokemons/${pikachu.id}`,
+    it('Should have a details link', () => {
+      const { history } = renderWithRouter(<App />);
+      const detailsLink = screen.getByRole('link', {
+        name: /More details/i,
+        href: `pokemons/${pokemon.id}`,
+      });
+      expect(detailsLink).toBeInTheDocument();
+
+      userEvent.click(detailsLink);
+      const { pathname } = history.location;
+      expect(pathname).toBe(`/pokemons/${pokemon.id}`);
     });
-    expect(detailsLink).toBeInTheDocument();
 
-    userEvent.click(detailsLink);
-    const { pathname } = history.location;
-    expect(pathname).toBe(`/pokemons/${pikachu.id}`);
-  });
+    it('Should have a star icon in Favorite Pokemon', () => {
+      renderWithRouter(<App />);
+      const detailsLink = screen.getByRole('link', {
+        name: /More details/i,
+      });
+      userEvent.click(detailsLink);
+      const pokemonFavoritado = screen.getByRole('checkbox');
+      userEvent.click(pokemonFavoritado);
 
-  it('Should have a star icon in Favorite Pokemon', () => {
-    renderWithRouter(<App />);
-    const detailsLink = screen.getByRole('link', {
-      name: /More details/i,
+      const favoriteIcon = screen.getByAltText(`${pokemon.name} is marked as favorite`);
+      expect(favoriteIcon).toBeInTheDocument();
+      expect(favoriteIcon).toHaveAttribute('src', '/star-icon.svg');
+      expect(favoriteIcon)
+        .toHaveAttribute('alt', `${pokemon.name} is marked as favorite`);
     });
-    userEvent.click(detailsLink);
-    const pokemonFavoritado = screen.getByRole('checkbox');
-    userEvent.click(pokemonFavoritado);
-
-    const favoriteIcon = screen.getByAltText('Pikachu is marked as favorite');
-    expect(favoriteIcon).toBeInTheDocument();
-    expect(favoriteIcon).toHaveAttribute('src', '/star-icon.svg');
-    expect(favoriteIcon).toHaveAttribute('alt', 'Pikachu is marked as favorite');
   });
 });
