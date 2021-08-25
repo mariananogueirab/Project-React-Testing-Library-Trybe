@@ -18,7 +18,6 @@ describe('Test Favorite Pokemons Page', () => {
     expect(linkMoreDetails).toBeInTheDocument();
 
     userEvent.click(linkMoreDetails);
-    const testidPokemon = screen.getByTestId('pokemon-name');
 
     const pokemonFavoritado = screen.getByRole('checkbox');
     userEvent.click(pokemonFavoritado);
@@ -26,6 +25,7 @@ describe('Test Favorite Pokemons Page', () => {
     const linkFavoritePokemon = screen.getByRole('link', { name: 'Favorite Pokémons' });
     userEvent.click(linkFavoritePokemon);
 
-    expect(testidPokemon.value).toBeInTheDocument();
+    const testidPokemon = screen.getByTestId('pokemon-name');
+    expect(testidPokemon).toBeInTheDocument();
   });
 });
