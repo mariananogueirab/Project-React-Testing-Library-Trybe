@@ -16,6 +16,7 @@ describe('Test Pokedex', () => {
   });
 
   const POKEMON_NAME = 'pokemon-name';
+
   it('Test next Pokemon', () => {
     renderWithRouter(<App />);
     const nextButton = screen.getByRole('button', {
@@ -44,6 +45,11 @@ describe('Test Pokedex', () => {
 
   it('Test filter buttons', () => {
     renderWithRouter(<App />);
+
+    const buttonsTypes = screen.getAllByTestId('pokemon-type-button');
+    buttonsTypes.forEach((button) => {
+      expect(button).toBeInTheDocument();
+    });
 
     const pokemonTypes = (
       ['Electric', 'Fire', 'Bug', 'Poison', 'Psychic', 'Normal', 'Dragon']
@@ -90,5 +96,6 @@ describe('Test Pokedex', () => {
       name: 'All',
     });
     expect(allTypesButton).toBeInTheDocument();
+    userEvent.click(allTypesButton);
   });
 });
