@@ -1,8 +1,9 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-/* import userEvent from '@testing-library/user-event'; */
+import { screen, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from '../util/renderWithRouter';
+import pokemons from '../data';
 
 describe('Test Pokedex', () => {
   it('Test heading h2', () => {
@@ -20,6 +21,26 @@ describe('Test Pokedex', () => {
       name: /Próximo pokémon/i,
     });
     expect(nextButton).toBeInTheDocument();
+    const pokemonName = screen.getByTestId('pokemon-name');
+
+    const nextPokemon = (pokemon, index) => {
+      if (index === pokemons.length - 1) {
+        expect(pokemonName.textContent).toBe(pokemon.name);
+        userEvent.click(nextButton);
+        expect(pokemonName.textContent).toBe(pokemons[0].name);
+      } else {
+        expect(pokemonName.textContent).toBe(pokemon.name);
+        userEvent.click(nextButton);
+      }
+    };
+
+    pokemons.forEach((pokemon, index) => nextPokemon(pokemon, index));
+  });
+
+  it('Test if only one Pokemon apears', () => {
+    renderWithRouter(<App />);
+    const namesPokemons = screen.queryAllByTestId('pokemon-name');
+    expect(namesPokemons).toHaveLength(1);
   });
 
   it('Test filter buttons', () => {
@@ -33,6 +54,34 @@ describe('Test Pokedex', () => {
         name: type,
       });
       expect(typeButton).toBeInTheDocument();
+
+      const pokemonsWithSameType = pokemons
+        .filter((pokemon) => pokemon.type === type);
+
+      userEvent.click(typeButton);
+
+      const nextButton = screen.getByRole('button', {
+        name: /Próximo pokémon/i,
+      });
+      const pokemonName = screen.getByTestId('pokemon-name');
+
+      pokemonsWithSameType.forEach((pokemon, index) => {
+        if (index === pokemons.length - 1) {
+          expect(pokemonName.textContent).toBe(pokemon.name);
+          userEvent.click(nextButton);
+          expect(pokemonName.textContent).toBe(pokemons[0].name);
+        } if (pokemonsWithSameType.length === 1) {
+          expect(pokemonName.textContent).toBe(pokemon.name);
+        } else {
+          expect(pokemonName.textContent).toBe(pokemon.name);
+          userEvent.click(nextButton);
+        }
+      });
+
+      const buttonAll = screen.getByRole('button', {
+        name: 'All',
+      });
+      expect(buttonAll).toBeInTheDocument();
     });
   });
 
