@@ -12,7 +12,7 @@ describe('Test Favorite Pokemons Page', () => {
     expect(notFountText).toBeInTheDocument();
   });
 
-  it('Test Favorite Pokemons', async () => {
+  it('Test Favorite Pokemons', () => {
     renderWithRouter(<App />);
     const linkMoreDetails = screen.getByRole('link', { name: 'More details' });
     expect(linkMoreDetails).toBeInTheDocument();
