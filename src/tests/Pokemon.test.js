@@ -27,6 +27,8 @@ describe('Test pokemon card', () => {
       src: pokemon.image,
     });
     expect(imagePokemon).toBeInTheDocument();
+    expect(imagePokemon).toHaveAttribute('src', pokemon.image);
+    expect(imagePokemon).toHaveAttribute('alt', `${pokemon.name} sprite`);
   });
 
   it('Should have a details link', () => {
