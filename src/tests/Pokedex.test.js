@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from '../util/renderWithRouter';
@@ -15,15 +15,16 @@ describe('Test Pokedex', () => {
     expect(pokedexTitle).toBeInTheDocument();
   });
 
+  const POKEMON_NAME = 'pokemon-name';
   it('Test next Pokemon', () => {
     renderWithRouter(<App />);
     const nextButton = screen.getByRole('button', {
       name: /Próximo pokémon/i,
     });
     expect(nextButton).toBeInTheDocument();
-    const pokemonName = screen.getByTestId('pokemon-name');
+    const pokemonName = screen.getByTestId(POKEMON_NAME);
 
-    const nextPokemon = (pokemon, index) => {
+    pokemons.forEach((pokemon, index) => {
       if (index === pokemons.length - 1) {
         expect(pokemonName.textContent).toBe(pokemon.name);
         userEvent.click(nextButton);
@@ -32,14 +33,12 @@ describe('Test Pokedex', () => {
         expect(pokemonName.textContent).toBe(pokemon.name);
         userEvent.click(nextButton);
       }
-    };
-
-    pokemons.forEach((pokemon, index) => nextPokemon(pokemon, index));
+    });
   });
 
   it('Test if only one Pokemon apears', () => {
     renderWithRouter(<App />);
-    const namesPokemons = screen.queryAllByTestId('pokemon-name');
+    const namesPokemons = screen.queryAllByTestId(POKEMON_NAME);
     expect(namesPokemons).toHaveLength(1);
   });
 
@@ -63,7 +62,7 @@ describe('Test Pokedex', () => {
       const nextButton = screen.getByRole('button', {
         name: /Próximo pokémon/i,
       });
-      const pokemonName = screen.getByTestId('pokemon-name');
+      const pokemonName = screen.getByTestId(POKEMON_NAME);
 
       pokemonsWithSameType.forEach((pokemon, index) => {
         if (index === pokemons.length - 1) {
